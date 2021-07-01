@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 volumes:
   local_postgres_data: {}
@@ -14,7 +14,7 @@ services:
     depends_on:
       - postgres
     volumes:
-      - .:/app:z
+      - ./backend:/app:z
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
@@ -34,18 +34,16 @@ services:
     env_file:
       - ./.envs/.local/.postgres
 
-  docs:
-    image: clion_local_docs
-    container_name: docs
+  react:
+    container_name: react
     build:
       context: .
-      dockerfile: ./compose/local/docs/Dockerfile
-    env_file:
-      - ./.envs/.local/.django
+      dockerfile: ./compose/production/react/Dockerfile
+    image: clion_production_react
     volumes:
-      - ./docs:/docs:z
-      - ./config:/app/config:z
-      - ./clion:/app/clion:z
+      - "./frontend:/app"
+      - "/app/node_modules"
     ports:
-      - "7000:7000"
-    command: /start-docs
+      - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
