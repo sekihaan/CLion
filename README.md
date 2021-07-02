@@ -67,3 +67,14 @@ The following details how to deploy this application.
 
 See detailed [cookiecutter-django Docker
 documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+
+### Docker起動方法
+#### project配下で以下のコマンドを実行する。
+1. docker-compose -f local.yml build
+2. docker-compose -f local.yml up -d
+
+### 実行中のDockerに入る
+docker-compose -f local.yml exec django bash
+
+### Docker 停止して削除
+docker-compose -f local.yml down

@@ -16,6 +16,7 @@ urlpatterns = [
     # User management
     path("users/", include("clion.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
+    path('auth/',include('drf_social_oauth2.urls',namespace='drf')) #add this
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
