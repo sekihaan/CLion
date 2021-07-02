@@ -76,5 +76,8 @@ documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-wi
 ### 実行中のDockerに入る
 docker-compose -f local.yml exec django bash
 
+### entrypointを読み込む
+docker-compose -f local.yml run --rm django bash
+
 ### Docker 停止して削除
 docker-compose -f local.yml down
