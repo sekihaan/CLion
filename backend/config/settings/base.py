@@ -70,6 +70,9 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "rest_framework",
     "rest_framework.authtoken",
+    "oauth2_provider",
+    "social_django",
+    "drf_social_oauth2",
     "corsheaders",
 ]
 
@@ -89,9 +92,25 @@ MIGRATION_MODULES = {"sites": "clion.contrib.sites.migrations"}
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
 AUTHENTICATION_BACKENDS = [
+    # Django
     "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
+    # Google OAuth2
+    "social_core.backends.google.GoogleOAuth2",
+    # drf-social-oauth2
+    "drf_social_oauth2.backends.DjangoOAuth2",
+    # "allauth.account.auth_backends.AuthenticationBackend",
 ]
+
+# Google configuration
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
+
+# Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+   'https://www.googleapis.com/auth/userinfo.email',
+   'https://www.googleapis.com/auth/userinfo.profile',
+]
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
@@ -134,6 +153,15 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware", #add
+    "django.middleware.common.CommonMiddleware", #add
+]
+
+# CORS
+# ------------------------------------------------------------------------------
+CORS_ALLOWED_ORIGINS = [
+   "http://localhost:3000",
+   "http://127.0.0.1:8000",
 ]
 
 # STATIC
@@ -184,6 +212,8 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "clion.utils.context_processors.settings_context",
+                "social_django.context_processors.backends", #add
+                "social_django.context_processors.login_redirect", #add
             ],
         },
     }
@@ -274,8 +304,10 @@ SOCIALACCOUNT_ADAPTER = "clion.users.adapters.SocialAccountAdapter"
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
+        # "rest_framework.authentication.SessionAuthentication",
+        # "rest_framework.authentication.TokenAuthentication",
+        "oauth2_provider.contrib.rest_framework.OAuth2Authentication", # add
+        "drf_social_oauth2.authentication.SocialAuthentication", # add
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }

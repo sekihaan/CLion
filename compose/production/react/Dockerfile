@@ -4,10 +4,10 @@ WORKDIR /app
 
 ENV PATH /app/node_modules/.bin:$PATH
 
-COPY ./frontend/app/package.json ./
+COPY ./frontend/package.json ./
 RUN npm install --silent
 RUN npm install react-scripts -g --silent
 
-COPY ./frontend/app ./
+COPY ./frontend ./
 
 CMD ["npm", "start"]
